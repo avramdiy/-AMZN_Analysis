@@ -32,4 +32,8 @@
 
 ### 4th Commit
 
+- Create a new plot and route, but for the monthly aggregate "Close" price of 2008 & 1998. "/closeplot"
+
+- Rename /plot to /openplot
+
 ### 5th Commit
