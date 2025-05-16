@@ -22,6 +22,14 @@
 
 ### 3rd Commit
 
+- Adjusted name of filtered data dataframe
+
+- Created a new route and plot to define two line plots, showing the monthly aggregate "Open" price for 1998 & 2008.
+
+- Plot looks good, but I want the X-axis to show January through December, with both line plots shown over the same time frame.
+
+- Chart is corrected. Good to see a comparison, but there is not much correlation between the sets of data.
+
 ### 4th Commit
 
 ### 5th Commit
