@@ -16,21 +16,34 @@ def load_file():
         return {"error": "File does not exist"}, 404
 
     try:
-        # Adjust delimiter if needed, e.g., delimiter='\t'
         df = pd.read_csv(file_path)
 
-        html_table = df.to_html(classes='table table-striped', index=False)
+        # Drop the 'OpenInt' column if it exists
+        if 'OpenInt' in df.columns:
+            df = df.drop(columns=['OpenInt'])
+
+        # Convert date column to datetime (assume the column is named 'Date')
+        df['Date'] = pd.to_datetime(df['Date'])
+
+        # Filter rows within either of the two date ranges
+        mask = (
+            ((df['Date'] >= '1998-01-01') & (df['Date'] <= '1998-11-10')) |
+            ((df['Date'] >= '2008-01-01') & (df['Date'] <= '2008-11-10'))
+        )
+        df_filtered = df.loc[mask]
+
+        html_table = df_filtered.to_html(classes='table table-striped', index=False)
 
         html_template = f"""
         <!DOCTYPE html>
         <html>
         <head>
-            <title>DataFrame Viewer</title>
+            <title>Filtered DataFrame Viewer</title>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
         </head>
         <body>
             <div class="container mt-4">
-                <h2>$AMZN DATA</h2>
+                <h2>Filtered Data from {file_path}</h2>
                 {html_table}
             </div>
         </body>
