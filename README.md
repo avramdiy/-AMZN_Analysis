@@ -37,3 +37,11 @@
 - Rename /plot to /openplot
 
 ### 5th Commit
+
+- Create a new plot & route using the "High" & "Low" prices of 2008 & 1998, to create four line plots showing the monthly "High" and "Low" price points for the years of 2008 & 1998.
+
+- This shows a tighter range of price movement in 1998, with much larger variance in 2008.
+
+- A further study could delve into the likelihood of price movement per month, while using additional years for less bias within the analysis.
+
+- Fin.

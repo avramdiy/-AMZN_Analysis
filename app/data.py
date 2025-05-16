@@ -161,6 +161,61 @@ def plot_close_prices():
 
     except Exception as e:
         return {"error": str(e)}, 500
-    
+
+@app.route('/medianplot')
+def plot_high_low_prices():
+    file_path = "C:\\Users\\avram\\OneDrive\\Desktop\\TRG Week 24\\amzn.us.txt"
+    if not os.path.exists(file_path):
+        return {"error": "File does not exist"}, 404
+
+    try:
+        df = pd.read_csv(file_path)
+        df['Date'] = pd.to_datetime(df['Date'])
+
+        # Filter for years 1998 and 2008
+        df_1998 = df[(df['Date'] >= '1998-01-01') & (df['Date'] <= '1998-12-31')]
+        df_2008 = df[(df['Date'] >= '2008-01-01') & (df['Date'] <= '2008-12-31')]
+
+        # Aggregate monthly median of "High" and "Low" prices
+        monthly_1998 = df_1998.resample('M', on='Date')[['High', 'Low']].median()
+        monthly_2008 = df_2008.resample('M', on='Date')[['High', 'Low']].median()
+
+        # Prepare months for x-axis
+        months = range(1, 13)
+        month_names = [calendar.month_abbr[m] for m in months]
+
+        # Convert index to month numbers and reindex to ensure all months present
+        monthly_1998.index = monthly_1998.index.month
+        monthly_2008.index = monthly_2008.index.month
+
+        monthly_1998 = monthly_1998.reindex(months)
+        monthly_2008 = monthly_2008.reindex(months)
+
+        # Plotting
+        plt.figure(figsize=(10, 6))
+        plt.plot(months, monthly_1998['High'], marker='o', label='1998 High')
+        plt.plot(months, monthly_1998['Low'], marker='o', label='1998 Low')
+        plt.plot(months, monthly_2008['High'], marker='o', label='2008 High')
+        plt.plot(months, monthly_2008['Low'], marker='o', label='2008 Low')
+        plt.title('Monthly Median High and Low Prices for 1998 & 2008')
+        plt.xlabel('Month')
+        plt.ylabel('Median Price')
+        plt.xticks(months, month_names)
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+
+        # Save plot to in-memory buffer
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        plt.close()
+        buf.seek(0)
+
+        return Response(buf.getvalue(), mimetype='image/png')
+
+    except Exception as e:
+        return {"error": str(e)}, 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)
